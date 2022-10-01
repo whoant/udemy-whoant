@@ -1,0 +1,34 @@
+.row
+  - @users.each do |user|
+    .col-md-4
+      = render 'users/user', user: user
+
+= search_form_for @q do |f|
+  = f.search_field :email_cont, placeholder: 'email'
+  = f.search_field :sign_in_count_eq, placeholder: 'sign in count'
+  = f.search_field :email_or_sign_in_count_eq, placeholder: 'email or sign in count'
+  = f.submit
+= link_to 'Refresh', users_path
+
+%table.table.table-bordered
+  %thead
+    %tr
+      %th id
+      %th= sort_link(@q, :email)
+      %th created_at
+      %th= 'sign_in_count'.humanize
+      %th= 'current_sign_in_at'.humanize
+      %th= 'last_sign_in_at'.humanize
+      %th= 'current_sign_in_ip'.humanize
+      %th= 'last_sign_in_ip'.humanize
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.id
+        %td= user.email
+        %th= user.created_at
+        %th= user.sign_in_count
+        %th= user.current_sign_in_at
+        %th= user.last_sign_in_at
+        %th= user.current_sign_in_ip
+        %th= user.last_sign_in_ip

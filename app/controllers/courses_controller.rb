@@ -3,11 +3,17 @@ class CoursesController < ApplicationController
 
   # GET /courses or /courses.json
   def index
+=begin
     if params[:title]
       @courses = Course.where('title LIKE ?', "%#{params[:title]}%")
     else
-      @courses = Course.all
+      #@courses = Course.all
+      @q = Course.ransack(params[:q])
+      @courses = @q.result.includes(:user)
     end
+=end
+    @ransack_courses = Course.ransack(params[:courses_search], search_key: :courses_search)
+    @courses = @ransack_courses.result.includes(:user)
   end
 
   # GET /courses/1 or /courses/1.json
@@ -65,11 +71,11 @@ class CoursesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_course
-    @course = Course.find(params[:id])
+    @course = Course.friendly.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:title, :description)
+    params.require(:course).permit(:title, :description, :short_description, :price, :language, :level)
   end
 end
