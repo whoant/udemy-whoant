@@ -2,6 +2,7 @@ class Course < ApplicationRecord
   include PublicActivity::Model
 
   belongs_to :user
+  has_many :lessons, dependent: :destroy
 
   validates :title, :short_description, :language, :level, presence: true
   validates :description, presence: true, length: { :minimum => 5 }
@@ -23,4 +24,8 @@ class Course < ApplicationRecord
   end
 
   tracked owner: Proc.new { |controller, model| controller.current_user }
+
+  def to_s
+    title
+  end
 end

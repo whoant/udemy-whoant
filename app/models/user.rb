@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  extend FriendlyId
   rolify
   has_many :courses
   # Include default devise modules. Others available are:
@@ -8,6 +9,8 @@ class User < ApplicationRecord
 
   validate :must_have_a_role, on: :update
   after_create :assign_default_role
+
+  friendly_id :email, use: :slugged
 
   def to_s
     email
@@ -26,6 +29,10 @@ class User < ApplicationRecord
       self.add_role(:student) if self.roles.blank?
       self.add_role(:teacher)
     end
+  end
+
+  def online?
+    updated_at > 2.minutes.ago
   end
 
   private
