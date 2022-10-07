@@ -17,12 +17,13 @@ class LessonsController < ApplicationController
 
   # GET /lessons/1/edit
   def edit
+    authorize :lesson
   end
 
   # POST /lessons or /lessons.json
   def create
     @lesson = Lesson.new(lesson_params)
-
+    
     respond_to do |format|
       if @lesson.save
         format.html { redirect_to lesson_url(@lesson), notice: "Lesson was successfully created." }
@@ -49,6 +50,7 @@ class LessonsController < ApplicationController
 
   # DELETE /lessons/1 or /lessons/1.json
   def destroy
+    authorize @lesson
     @lesson.destroy
 
     respond_to do |format|
