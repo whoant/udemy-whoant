@@ -15,7 +15,7 @@ class LessonPolicy < ApplicationPolicy
 
     def update?
       # @record.course.user == @user
-    # end
+    end
 
     def new?
       # @user.has_role?(:teacher)
