@@ -4,11 +4,12 @@ class LessonsController < ApplicationController
   # GET /lessons or /lessons.json
   def index
     @lessons = Lesson.all
+    @course = Course.friendly.find(params[:course_id])
   end
 
   # GET /lessons/1 or /lessons/1.json
   def show
-    # authorize @lesson
+    authorize @lesson
   end
 
   # GET /lessons/new
@@ -19,7 +20,7 @@ class LessonsController < ApplicationController
 
   # GET /lessons/1/edit
   def edit
-    authorize :lesson
+    authorize @lesson
   end
 
   # POST /lessons or /lessons.json
@@ -27,7 +28,7 @@ class LessonsController < ApplicationController
     @lesson = Lesson.new(lesson_params)
     @course = Course.friendly.find(params[:course_id])
     @lesson.course_id = @course.id
-    
+
     respond_to do |format|
       if @lesson.save
         format.html { redirect_to course_lesson_url(@course, @lesson), notice: "Lesson was successfully created." }
@@ -44,7 +45,7 @@ class LessonsController < ApplicationController
     authorize @lesson
     respond_to do |format|
       if @lesson.update(lesson_params)
-        format.html { redirect_to lesson_url(@lesson), notice: "Lesson was successfully updated." }
+        format.html { redirect_to course_lesson_url(@course, @lesson), notice: "Lesson was successfully updated." }
         format.json { render :show, status: :ok, location: @lesson }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -59,7 +60,7 @@ class LessonsController < ApplicationController
     @lesson.destroy
 
     respond_to do |format|
-      format.html { redirect_to lessons_url, notice: "Lesson was successfully destroyed." }
+      format.html { redirect_to course_lessons_url, notice: "Lesson was successfully destroyed." }
       format.json { head :no_content }
     end
   end
